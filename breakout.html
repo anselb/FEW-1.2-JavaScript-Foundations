@@ -100,12 +100,21 @@
         }
       }
 
+      function collided(brick) {
+        xDifference = x - Math.max(brick.x, Math.min(x, brick.x + brickWidth));
+        yDifference = y - Math.max(brick.y, Math.min(y, brick.y + brickHeight));
+        return (xDifference * xDifference + yDifference * yDifference) < (ballRadius * ballRadius);
+
+        // Old collision collisionDetection
+        // return (x > brick.x && x < brick.x + brickWidth && y > brick.y && y < brick.y + brickHeight)
+      }
+
       function collisionDetection() {
         for(var c = 0; c < brickColumnCount; c++) {
           for(var r = 0; r < brickRowCount; r++) {
             var b = bricks[c][r];
             if(b.status == 1) {
-              if(x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
+              if(collided(b)) {
                 dy = -dy;
                 b.status = 0;
                 score++;
