@@ -10,7 +10,8 @@
   </head>
   <body>
 
-    <canvas id='myCanvas' width='480' height='320'></canvas>
+    <!-- Canvas default values (480, 320) is in ratio 3:2 -->
+    <canvas id='myCanvas' width='565' height='400'></canvas>
 
     <script>
       var canvas = document.getElementById('myCanvas');
@@ -30,8 +31,8 @@
       var rightPressed = false;
       var leftPressed = false;
 
-      var brickRowCount = 3;
-      var brickColumnCount = 5;
+      var brickRowCount = 5;
+      var brickColumnCount = 6;
       var brickWidth = 75;
       var brickHeight = 20;
       var brickPadding = 10;
@@ -42,8 +43,8 @@
       var lives = 3;
 
       var textColor = '#000000';
-      var ballColor = getAColor();
-      var paddleColor = getAColor();
+      var ballColor = getAColor('dark');
+      var paddleColor = getAColor('dark');
       var backgroundColor = getAColor('light');
 
       var bricks = [];
@@ -61,6 +62,12 @@
         if (type === 'light') {
           lightness = '80%'
         };
+
+        saturation = '100%'
+        if (type === 'dark') {
+          saturation = '70%'
+        };
+
         hue = Math.floor(Math.random() * 361);
         color = `hsl(${hue}, 100%, ${lightness})`;
         return color;
@@ -90,11 +97,27 @@
               var brickY = (r * (brickHeight + brickPadding)) + brickOffsetTop
               bricks[c][r].x = brickX;
               bricks[c][r].y = brickY;
+
+              // Create gradient
+              // console.log(brickX, brickY, brickWidth, brickHeight);
+              startX = (brickX + brickWidth / 2)
+              startY = (brickY + brickWidth)
+              endX = (brickX + brickWidth / 2)
+              endY = brickY
+              var blkGrd = ctx.createLinearGradient(startX, startY, endX, endY);
+              blkGrd.addColorStop(0, 'black');   // Places a color at the start
+              blkGrd.addColorStop(1, bricks[c][r].color);  // Places a color at the end
+              // Paint gradient
               ctx.beginPath();
-              ctx.rect(brickX, brickY, brickWidth, brickHeight);
-              ctx.fillStyle = bricks[c][r].color;
-              ctx.fill();
+              ctx.fillStyle = blkGrd;
+              ctx.fillRect(brickX, brickY, brickWidth, brickHeight);
               ctx.closePath();
+
+              // ctx.beginPath();
+              // ctx.rect(brickX, brickY, brickWidth, brickHeight);
+              // ctx.fillStyle = bricks[c][r].color;
+              // ctx.fill();
+              // ctx.closePath();
             }
           }
         }
@@ -141,12 +164,22 @@
         ctx.fillText('Lives: ' + lives, canvas.width - 65, 20)
       }
 
+      // Create gradient
+      var grd = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+      grd.addColorStop(0, getAColor('light'));   // Places a color at the start
+      grd.addColorStop(1, getAColor('light'));  // Places a color at the end
+
       function draw() {
         // Clear canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+
         // Set background color to the canvas
         ctx.beginPath();
-        ctx.fillStyle = backgroundColor;
+        // Set random color to background
+        // ctx.fillStyle = backgroundColor;
+        // ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // Fill with gradient
+        ctx.fillStyle = grd;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.closePath();
 
