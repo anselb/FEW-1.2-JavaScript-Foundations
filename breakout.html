@@ -51,7 +51,7 @@
       for(var c = 0; c < brickColumnCount; c++) {
         bricks[c] = [];
         for(var r = 0; r < brickRowCount; r++) {
-          brickColor = getAColor();
+          brickColor = getAColor('dark');
           bricks[c][r] = { x: 0, y: 0, status: 1, color: brickColor };
         }
       }
@@ -69,7 +69,7 @@
         };
 
         hue = Math.floor(Math.random() * 361);
-        color = `hsl(${hue}, 100%, ${lightness})`;
+        color = `hsl(${hue}, ${saturation}, ${lightness})`;
         return color;
       }
 
@@ -159,7 +159,7 @@
       function collided(brick) {
         xDifference = x - Math.max(brick.x, Math.min(x, brick.x + brickWidth));
         yDifference = y - Math.max(brick.y, Math.min(y, brick.y + brickHeight));
-        return (xDifference * xDifference + yDifference * yDifference) < (ballRadius * ballRadius);
+        return (xDifference ** 2 + yDifference ** 2) < (ballRadius * ballRadius);
 
         // Old collision collisionDetection
         // return (x > brick.x && x < brick.x + brickWidth && y > brick.y && y < brick.y + brickHeight)
