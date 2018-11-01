@@ -144,6 +144,15 @@
           ctx.fillStyle = `hsl(${360 / 10 * rectCount}, 100%, 50%)`;
           ctx.fillRect(rectX, rectY, rectWidth, rectHeight);
         }
+        for(let rectCount = 10; rectCount > 0; rectCount--) {
+          // Begin path is necessary here
+          ctx.beginPath();
+          // Math to get rainbow color order correct
+          colorCount = 10 - rectCount
+          ctx.fillStyle = `hsl(${360 / 10 * colorCount}, 100%, 50%)`;
+          ctx.arc(canvas.width / 2, canvas.height, 25 * rectCount, Math.PI, 0);
+          ctx.fill();
+        }
         ctx.closePath();
       }
 
