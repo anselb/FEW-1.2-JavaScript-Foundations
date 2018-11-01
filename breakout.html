@@ -123,6 +123,30 @@
         }
       }
 
+      function drawBackround() {
+        // Set background color to the canvas
+        ctx.beginPath();
+        // Set random color to background
+        // ctx.fillStyle = backgroundColor;
+        // ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Fill with gradient
+        // ctx.fillStyle = grd;
+        // ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Fill with rainbows
+        for(let rectCount = 0; rectCount < 10; rectCount++) {
+          const rectX = canvas.width / 10 * rectCount
+          const rectY = 0
+          const rectWidth = canvas.width / 10
+          const rectHeight = canvas.height
+
+          ctx.fillStyle = `hsl(${360 / 10 * rectCount}, 100%, 50%)`;
+          ctx.fillRect(rectX, rectY, rectWidth, rectHeight);
+        }
+        ctx.closePath();
+      }
+
       function collided(brick) {
         xDifference = x - Math.max(brick.x, Math.min(x, brick.x + brickWidth));
         yDifference = y - Math.max(brick.y, Math.min(y, brick.y + brickHeight));
@@ -173,16 +197,7 @@
         // Clear canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Set background color to the canvas
-        ctx.beginPath();
-        // Set random color to background
-        // ctx.fillStyle = backgroundColor;
-        // ctx.fillRect(0, 0, canvas.width, canvas.height);
-        // Fill with gradient
-        ctx.fillStyle = grd;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.closePath();
-
+        drawBackround();
         drawBall();
         drawPaddle();
         drawBricks();
