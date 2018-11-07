@@ -234,9 +234,9 @@
       }
 
       function collisionDetection() {
-        for(let c = 0; c < brickColumnCount; c++) {
-          for(let r = 0; r < brickRowCount; r++) {
-            let b = bricks[c][r];
+        for(let col = 0; col < brickColumnCount; col++) {
+          for(let row = 0; row < brickRowCount; row++) {
+            let b = bricks[col][row];
             if(b.status == 1) {
               if(collided(b)) {
                 ball.dy = -ball.dy;
