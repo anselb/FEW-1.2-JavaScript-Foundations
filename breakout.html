@@ -53,6 +53,58 @@
         }
       }
 
+      class Brick {
+        constructor(x = 0, y = 0, status = 1, width = 75, height = 20, color = getAColor('dark')) {
+          this.x = x;
+          this.y = y;
+          this.status = status;
+
+          this.width = width;
+          this.height = height;
+          this.color = color;
+        }
+
+        render(ctx) {
+          // Set locations for gradient
+          const startX = this.x + this.width / 2;
+          const startY = this.y + this.width;
+          const endX = this.x + this.width / 2;
+          const endY = this.y;
+          // Create gradient
+          const brkGrd = ctx.createLinearGradient(startX, startY, endX, endY);
+          // Places a color at the start
+          brkGrd.addColorStop(0, 'black');
+          // Places a color at the end
+          brkGrd.addColorStop(1, this.color);
+          // Paint gradient
+          ctx.beginPath();
+          ctx.fillStyle = brkGrd;
+          ctx.fillRect(this.x, this.y, this.width, this.height);
+          ctx.closePath();
+
+          // Paint with a flat color
+          // ctx.beginPath();
+          // ctx.rect(this.x, this.y, this.width, this.height);
+          // ctx.fillStyle = this.color;
+          // ctx.fill();
+          // ctx.closePath();
+        }
+      }
+
+      const brickRowCount = 5;
+      const brickColumnCount = 6;
+      const brickPadding = 10;
+      const brickOffsetTop = 30;
+      const brickOffsetLeft = 30;
+
+      let bricks = [];
+      for(let col = 0; col < brickColumnCount; col++) {
+        bricks[col] = [];
+        for(let row = 0; row < brickRowCount; row++) {
+          bricks[col][row] = new Brick();
+        }
+      }
+
       let ball = new Ball()
 
       var paddleHeight = 10;
@@ -62,30 +114,12 @@
       var rightPressed = false;
       var leftPressed = false;
 
-      var brickRowCount = 5;
-      var brickColumnCount = 6;
-      var brickWidth = 75;
-      var brickHeight = 20;
-      var brickPadding = 10;
-      var brickOffsetTop = 30;
-      var brickOffsetLeft = 30;
-
       var score = 0;
       var lives = 3;
 
       var textColor = '#000000';
-      var ballColor = getAColor('dark');
       var paddleColor = getAColor('dark');
       var backgroundColor = getAColor('light');
-
-      var bricks = [];
-      for(var c = 0; c < brickColumnCount; c++) {
-        bricks[c] = [];
-        for(var r = 0; r < brickRowCount; r++) {
-          brickColor = getAColor('dark');
-          bricks[c][r] = { x: 0, y: 0, status: 1, color: brickColor };
-        }
-      }
 
       function drawPaddle() {
         ctx.beginPath();
@@ -99,31 +133,12 @@
         for(var c = 0; c < brickColumnCount; c++) {
           for(var r = 0; r < brickRowCount; r++) {
             if(bricks[c][r].status == 1) {
-              var brickX = (c * (brickWidth + brickPadding)) + brickOffsetLeft
-              var brickY = (r * (brickHeight + brickPadding)) + brickOffsetTop
+              var brickX = (c * (bricks[c][r].width + brickPadding)) + brickOffsetLeft
+              var brickY = (r * (bricks[c][r].height + brickPadding)) + brickOffsetTop
               bricks[c][r].x = brickX;
               bricks[c][r].y = brickY;
 
-              // Create gradient
-              // console.log(brickX, brickY, brickWidth, brickHeight);
-              startX = (brickX + brickWidth / 2)
-              startY = (brickY + brickWidth)
-              endX = (brickX + brickWidth / 2)
-              endY = brickY
-              var blkGrd = ctx.createLinearGradient(startX, startY, endX, endY);
-              blkGrd.addColorStop(0, 'black');   // Places a color at the start
-              blkGrd.addColorStop(1, bricks[c][r].color);  // Places a color at the end
-              // Paint gradient
-              ctx.beginPath();
-              ctx.fillStyle = blkGrd;
-              ctx.fillRect(brickX, brickY, brickWidth, brickHeight);
-              ctx.closePath();
-
-              // ctx.beginPath();
-              // ctx.rect(brickX, brickY, brickWidth, brickHeight);
-              // ctx.fillStyle = bricks[c][r].color;
-              // ctx.fill();
-              // ctx.closePath();
+              bricks[c][r].render(ctx);
             }
           }
         }
@@ -167,8 +182,8 @@
       }
 
       function collided(brick) {
-        xDifference = ball.x - Math.max(brick.x, Math.min(ball.x, brick.x + brickWidth));
-        yDifference = ball.y - Math.max(brick.y, Math.min(ball.y, brick.y + brickHeight));
+        xDifference = ball.x - Math.max(brick.x, Math.min(ball.x, brick.x + brick.width));
+        yDifference = ball.y - Math.max(brick.y, Math.min(ball.y, brick.y + brick.height));
         return (xDifference ** 2 + yDifference ** 2) < (ball.radius * ball.radius);
 
         // Old collision collisionDetection
