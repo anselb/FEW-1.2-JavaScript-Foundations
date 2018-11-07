@@ -184,17 +184,30 @@
         }
       }
 
+      class Lives {
+        constructor(x = canvas.width - 65, y = 20, color = '#000000', font = '16px Arial', lives = 3) {
+          this.x = x;
+          this.y = y;
+          this.color = color;
+          this.font = font;
+          this.lives = lives;
+        }
+
+        render(ctx) {
+          ctx.font = this.font;
+          ctx.fillStyle = this.color;
+          ctx.fillText('Lives: ' + this.lives, this.x, this.y)
+        }
+      }
+
       let ball = new Ball();
       let paddle = new Paddle();
       let background = new Background();
       let score = new Score();
+      let lives = new Lives();
 
       var rightPressed = false;
       var leftPressed = false;
-
-      var lives = 3;
-
-      var textColor = '#000000';
 
       function drawBricks() {
         for(let col = 0; col < brickColumnCount; col++) {
@@ -240,12 +253,6 @@
         }
       }
 
-      function drawLives() {
-        ctx.font = '16px Arial';
-        ctx.fillStyle = textColor;
-        ctx.fillText('Lives: ' + lives, canvas.width - 65, 20)
-      }
-
       function draw() {
         // Clear canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -256,7 +263,7 @@
         drawBricks();
         collisionDetection();
         score.render(ctx);
-        drawLives();
+        lives.render(ctx);
 
         ball.x += ball.dx;
         ball.y += ball.dy;
@@ -273,8 +280,8 @@
               ball.dy = -ball.dy;
             }
             else {
-              lives--;
-              if(!lives) {
+              lives.lives--;
+              if(!lives.lives) {
                 alert("Game Over");
                 ball.x = canvas.width / 2;
                 ball.y = canvas.height / 2;
