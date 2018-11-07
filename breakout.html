@@ -124,8 +124,53 @@
         }
       }
 
-      let ball = new Ball()
-      let paddle = new Paddle()
+      class Background {
+        constructor(color = getAColor('light')) {
+          this.color = color;
+        }
+
+        render(ctx) {
+          // Set background color to the canvas
+          ctx.beginPath();
+          // Set random color to background
+          // ctx.fillStyle = this.color;
+          // ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          // Create gradient
+          // var grd = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+          // grd.addColorStop(0, getAColor('light'));   // Places a color at the start
+          // grd.addColorStop(1, getAColor('light'));  // Places a color at the end
+          // Fill with gradient
+          // ctx.fillStyle = grd;
+          // ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          // Fill with rainbow rectangles
+          for(let rectCount = 0; rectCount < 10; rectCount++) {
+            const rectX = canvas.width / 10 * rectCount
+            const rectY = 0
+            const rectWidth = canvas.width / 10
+            const rectHeight = canvas.height
+
+            ctx.fillStyle = `hsl(${360 / 10 * rectCount}, 100%, 50%)`;
+            ctx.fillRect(rectX, rectY, rectWidth, rectHeight);
+          }
+          // Fill with rainbow arch
+          for(let rectCount = 10; rectCount > 0; rectCount--) {
+            // Begin path is necessary here
+            ctx.beginPath();
+            // Math to get rainbow color order correct
+            const colorCount = 10 - rectCount
+            ctx.fillStyle = `hsl(${360 / 10 * colorCount}, 100%, 50%)`;
+            ctx.arc(canvas.width / 2, canvas.height, 25 * rectCount, Math.PI, 0);
+            ctx.fill();
+          }
+          ctx.closePath();
+        }
+      }
+
+      let ball = new Ball();
+      let paddle = new Paddle();
+      let background = new Background();
 
       var rightPressed = false;
       var leftPressed = false;
@@ -134,7 +179,6 @@
       var lives = 3;
 
       var textColor = '#000000';
-      var backgroundColor = getAColor('light');
 
       function drawBricks() {
         for(let col = 0; col < brickColumnCount; col++) {
@@ -149,43 +193,6 @@
             }
           }
         }
-      }
-
-      function drawBackround() {
-        // Set background color to the canvas
-        ctx.beginPath();
-        // Set random color to background
-        // ctx.fillStyle = backgroundColor;
-        // ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        // Create gradient
-        // var grd = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-        // grd.addColorStop(0, getAColor('light'));   // Places a color at the start
-        // grd.addColorStop(1, getAColor('light'));  // Places a color at the end
-        // Fill with gradient
-        // ctx.fillStyle = grd;
-        // ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        // Fill with rainbows
-        for(let rectCount = 0; rectCount < 10; rectCount++) {
-          const rectX = canvas.width / 10 * rectCount
-          const rectY = 0
-          const rectWidth = canvas.width / 10
-          const rectHeight = canvas.height
-
-          ctx.fillStyle = `hsl(${360 / 10 * rectCount}, 100%, 50%)`;
-          ctx.fillRect(rectX, rectY, rectWidth, rectHeight);
-        }
-        for(let rectCount = 10; rectCount > 0; rectCount--) {
-          // Begin path is necessary here
-          ctx.beginPath();
-          // Math to get rainbow color order correct
-          colorCount = 10 - rectCount
-          ctx.fillStyle = `hsl(${360 / 10 * colorCount}, 100%, 50%)`;
-          ctx.arc(canvas.width / 2, canvas.height, 25 * rectCount, Math.PI, 0);
-          ctx.fill();
-        }
-        ctx.closePath();
       }
 
       function collided(brick) {
@@ -233,7 +240,7 @@
         // Clear canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        drawBackround();
+        background.render(ctx);
         ball.render(ctx);
         paddle.render(ctx);
         drawBricks();
