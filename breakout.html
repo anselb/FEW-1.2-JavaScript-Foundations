@@ -168,14 +168,30 @@
         }
       }
 
+      class Score {
+        constructor(x = 8, y = 20, color = '#000000', font = '16px Arial', score = 0) {
+          this.x = x;
+          this.y = y;
+          this.color = color;
+          this.font = font;
+          this.score = score;
+        }
+
+        render(ctx) {
+          ctx.font = this.font;
+          ctx.fillStyle = this.color;
+          ctx.fillText('Score: ' + this.score, this.x, this.y);
+        }
+      }
+
       let ball = new Ball();
       let paddle = new Paddle();
       let background = new Background();
+      let score = new Score();
 
       var rightPressed = false;
       var leftPressed = false;
 
-      var score = 0;
       var lives = 3;
 
       var textColor = '#000000';
@@ -212,9 +228,9 @@
               if(collided(b)) {
                 ball.dy = -ball.dy;
                 b.status = 0;
-                score++;
+                score.score++;
 
-                if(score == brickRowCount * brickColumnCount) {
+                if(score.score == brickRowCount * brickColumnCount) {
                   alert('You Won! Congratulations!')
                   document.location.reload();
                 }
@@ -222,12 +238,6 @@
             }
           }
         }
-      }
-
-      function drawScore() {
-        ctx.font = '16px Arial';
-        ctx.fillStyle = textColor;
-        ctx.fillText('Score: ' + score, 8, 20);
       }
 
       function drawLives() {
@@ -245,7 +255,7 @@
         paddle.render(ctx);
         drawBricks();
         collisionDetection();
-        drawScore();
+        score.render(ctx);
         drawLives();
 
         ball.x += ball.dx;
