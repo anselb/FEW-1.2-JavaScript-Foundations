@@ -105,11 +105,27 @@
         }
       }
 
-      let ball = new Ball()
+      class Paddle {
+        constructor(x = (canvas.width - 75) / 2, y = 0, width = 75, height = 10, color = getAColor('dark')) {
+          this.x = x;
+          this.y = y;
 
-      var paddleHeight = 10;
-      var paddleWidth = 75;
-      var paddleX = (canvas.width - paddleWidth) / 2;
+          this.width = width;
+          this.height = height;
+          this.color = color;
+        }
+
+        render(ctx) {
+          ctx.beginPath();
+          ctx.rect(this.x, canvas.height - this.height, this.width, this.height);
+          ctx.fillStyle = this.color;
+          ctx.fill();
+          ctx.closePath();
+        }
+      }
+
+      let ball = new Ball()
+      let paddle = new Paddle()
 
       var rightPressed = false;
       var leftPressed = false;
@@ -118,27 +134,18 @@
       var lives = 3;
 
       var textColor = '#000000';
-      var paddleColor = getAColor('dark');
       var backgroundColor = getAColor('light');
 
-      function drawPaddle() {
-        ctx.beginPath();
-        ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
-        ctx.fillStyle = paddleColor;
-        ctx.fill();
-        ctx.closePath();
-      }
-
       function drawBricks() {
-        for(var c = 0; c < brickColumnCount; c++) {
-          for(var r = 0; r < brickRowCount; r++) {
-            if(bricks[c][r].status == 1) {
-              var brickX = (c * (bricks[c][r].width + brickPadding)) + brickOffsetLeft
-              var brickY = (r * (bricks[c][r].height + brickPadding)) + brickOffsetTop
-              bricks[c][r].x = brickX;
-              bricks[c][r].y = brickY;
+        for(let col = 0; col < brickColumnCount; col++) {
+          for(let row = 0; row < brickRowCount; row++) {
+            if(bricks[col][row].status == 1) {
+              const brickX = (col * (bricks[col][row].width + brickPadding)) + brickOffsetLeft
+              const brickY = (row * (bricks[col][row].height + brickPadding)) + brickOffsetTop
+              bricks[col][row].x = brickX;
+              bricks[col][row].y = brickY;
 
-              bricks[c][r].render(ctx);
+              bricks[col][row].render(ctx);
             }
           }
         }
@@ -228,7 +235,7 @@
 
         drawBackround();
         ball.render(ctx);
-        drawPaddle();
+        paddle.render(ctx);
         drawBricks();
         collisionDetection();
         drawScore();
@@ -245,7 +252,7 @@
         if(ball.y + ball.dy < ball.radius) {
           ball.dy = -ball.dy;
         } else if(ball.y + ball.dy > canvas.height - ball.radius) {
-            if(ball.x > paddleX && ball.x < paddleX + paddleWidth) {
+            if(ball.x > paddle.x && ball.x < paddle.x + paddle.width) {
               ball.dy = -ball.dy;
             }
             else {
@@ -261,17 +268,17 @@
                 ball.y = canvas.height - 30;
                 ball.dx = 4;
                 ball.dy = -4;
-                paddleX = (canvas.width - paddleWidth) / 2;
+                paddle.x = (canvas.width - paddle.width) / 2;
               }
             }
         }
 
         // Move the paddle
-        if(rightPressed && paddleX < canvas.width - paddleWidth) {
-          paddleX += 7;
+        if(rightPressed && paddle.x < canvas.width - paddle.width) {
+          paddle.x += 7;
         }
-        else if(leftPressed && paddleX > 0) {
-          paddleX -= 7;
+        else if(leftPressed && paddle.x > 0) {
+          paddle.x -= 7;
         }
         requestAnimationFrame(draw);
       }
@@ -301,7 +308,7 @@
       function mouseMoveHandler(e) {
         var relativeX = e.clientX - canvas.offsetLeft;
         if(relativeX > 0 && relativeX < canvas.width) {
-          paddleX = relativeX - paddleWidth / 2;
+          paddle.x = relativeX - paddle.width / 2;
         }
       }
 
