@@ -58,6 +58,21 @@ OregonH.Event.eventTypes = [
     stat: 'oxen',
     value: 1,
     text: 'Found wild oxen. New oxen: '
+  },
+  {
+    type: 'ATTACK',
+    notification: 'negative',
+    text: 'Bandits are attacking you'
+  },
+  {
+    type: 'ATTACK',
+    notification: 'negative',
+    text: 'Bandits are attacking you'
+  },
+  {
+    type: 'ATTACK',
+    notification: 'negative',
+    text: 'Bandits are attacking you'
   }
 ];
 
@@ -70,6 +85,18 @@ OregonH.Event.generateEvent = function() {
   if(eventData.type == 'STAT-CHANGE') {
     this.stateChangeEvent(eventData);
   }
+
+  // attacks
+  else if(eventData.type == 'ATTACK') {
+    // pause game
+    this.game.pauseJourney();
+
+    // notify user
+    this.ui.notify(eventData.text, eventData.notification);
+
+    // prepare event
+    this.attackEvent(eventData);
+  }
 };
 
 OregonH.Event.stateChangeEvent = function(eventData) {
@@ -78,4 +105,12 @@ OregonH.Event.stateChangeEvent = function(eventData) {
     this.caravan[eventData.stat] += eventData.value;
     this.ui.notify(eventData.text + Math.abs(eventData.value), eventData.notification);
   }
+};
+
+// prepare an attack event
+OregonH.Event.attackEvent = function(eventData) {
+  var firepower = Math.round((0.7 + 0.6 * Math.random()) * OregonH.ENEMY_FIREPOWER_AVG);
+  var gold = Math.round((0.7 + 0.6 * Math.random()) * OregonH.ENEMY_GOLD_AVG);
+  
+  this.ui.showAttack(firepower, gold);
 };
