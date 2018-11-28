@@ -98,6 +98,10 @@ OregonH.Game.updateGame = function() {
     this.ui.notify('Your caravan starved to death', 'negative');
     this.gameActive = false;
     return;
+
+  // random events
+  if(Math.random() <= OregonH.EVENT_PROBABILITY) {
+    this.eventManager.generateEvent();
   }
 
   // update weight
