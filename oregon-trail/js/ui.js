@@ -88,7 +88,8 @@ OregonH.UI.runaway = function() {
   }
 
   // remove event listener
-  document.getElementById('runaway').removeEventListener('click');
+  // removing this does nothing and changing the passed function does nothing
+  // document.getElementById('runaway').removeEventListener('click', this.runaway);
 
   // resume journey
   document.getElementById('attack').classList.add('hidden');
