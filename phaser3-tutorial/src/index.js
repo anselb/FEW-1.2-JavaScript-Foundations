@@ -20,6 +20,9 @@ var config = {
 
 var game = new Phaser.Game(config);
 
+var score = 0;
+var scoreText;
+
 function preload () {
   this.load.image('sky', 'assets/sky.png');
   this.load.image('ground', 'assets/platform.png');
@@ -86,6 +89,8 @@ function create () {
     child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
   });
 
+  scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+
   // Adds collision between different physics types (dynamic and static)
   this.physics.add.collider(player, platforms);
   this.physics.add.collider(stars, platforms);
@@ -117,6 +122,10 @@ function update () {
   }
 }
 
+// Disables star's physics and makes star invisible and inactive
 function collectStar (player, star) {
   star.disableBody(true, true);
+
+  score += 10;
+  scoreText.setText('Score: ' + score);
 }
