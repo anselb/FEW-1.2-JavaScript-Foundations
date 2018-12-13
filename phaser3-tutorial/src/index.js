@@ -73,8 +73,25 @@ function create () {
     repeat: -1
   });
 
-  // Adds collision between player (dynamic) and platform (static)
+  stars = this.physics.add.group({
+    key: 'star',
+    // Number of stars
+    repeat: 11,
+    // Each star is spaced out 70 units from the last star on the x axis
+    setXY: { x: 12, y: 0, stepX: 70 }
+  });
+
+  // Sets random bounce for each star
+  stars.children.iterate(function (child) {
+    child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+  });
+
+  // Adds collision between different physics types (dynamic and static)
   this.physics.add.collider(player, platforms);
+  this.physics.add.collider(stars, platforms);
+
+  // If player and star overlap, call collectStar and pass player and star
+  this.physics.add.overlap(player, stars, collectStar, null, this);
 
   // Keyboard manager
   cursors = this.input.keyboard.createCursorKeys();
@@ -94,7 +111,12 @@ function update () {
     player.anims.play('turn');
   }
 
+  // Prevents player from jumping mid air
   if (cursors.up.isDown && player.body.touching.down) {
     player.setVelocityY(-330);
   }
+}
+
+function collectStar (player, star) {
+  star.disableBody(true, true);
 }
