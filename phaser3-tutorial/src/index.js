@@ -1,7 +1,16 @@
+const Phaser = require('phaser')
+
 var config = {
   type: Phaser.AUTO,
   width: 800,
   height: 600,
+  physics: {
+    default: 'arcade',
+    arcade: {
+      gravity: { y: 300 },
+      debug: false
+    }
+  },
   scene: {
     preload: preload,
     create: create,
@@ -23,8 +32,17 @@ function preload () {
 }
 
 function create () {
+  // images are loaded at their center
+  // order of loading images affects which images cover each other
   this.add.image(400, 300, 'sky');
-  this.add.image(400, 300, 'star');
+  // refers to physics defined in the config object
+  platforms = this.physics.add.staticGroup();
+  // ground platform
+  platforms.create(400, 568, 'ground').setScale(2).refreshBody();
+  // elevated platforms
+  platforms.create(600, 400, 'ground');
+  platforms.create(50, 250, 'ground');
+  platforms.create(750, 220, 'ground');
 }
 
 function update () {
