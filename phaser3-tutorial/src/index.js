@@ -20,6 +20,7 @@ var config = {
 
 var game = new Phaser.Game(config);
 
+var player;
 var score = 0;
 var scoreText;
 
@@ -89,11 +90,16 @@ function create () {
     child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
   });
 
+  bombs = this.physics.add.group();
+
   scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
 
   // Adds collision between different physics types (dynamic and static)
   this.physics.add.collider(player, platforms);
   this.physics.add.collider(stars, platforms);
+  this.physics.add.collider(bombs, platforms);
+
+  this.physics.add.collider(player, bombs, hitBomb, null, this);
 
   // If player and star overlap, call collectStar and pass player and star
   this.physics.add.overlap(player, stars, collectStar, null, this);
@@ -128,4 +134,33 @@ function collectStar (player, star) {
 
   score += 10;
   scoreText.setText('Score: ' + score);
+
+  // Re-enables stars to be collected after all of them are collected
+  if (stars.countActive(true) === 0) {
+    stars.children.iterate(function (child) {
+      child.enableBody(true, child.x, 0, true, true);
+    });
+
+    // Pick x coordinate to spawn, will be on oppside side of player
+    var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+
+    var bomb = bombs.create(x, 16, 'bomb');
+    bomb.setBounce(1);
+    bomb.setCollideWorldBounds(true);
+    // Random velocity
+    bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+    // Ignore gravity
+    bomb.allowGravity = false;
+  }
+}
+
+function hitBomb (player, bomb) {
+  // Stop game
+  this.physics.pause();
+
+  // Suppose to tint player red
+  player.setTint(0xff0000);
+
+  player.anims.play('turn');
+  gameOver = true;
 }
