@@ -49,6 +49,9 @@ function create () {
   player.setBounce(0.2);
   player.setCollideWorldBounds(true);
 
+  // Can set higher gravity but isn't necessary
+  // player.body.setGravityY(300)
+
   this.anims.create({
     key: 'left',
     frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
@@ -69,6 +72,9 @@ function create () {
     frameRate: 10,
     repeat: -1
   });
+
+  // Adds collision between player (dynamic) and platform (static)
+  this.physics.add.collider(player, platforms);
 }
 
 function update () {
