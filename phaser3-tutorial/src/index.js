@@ -1,6 +1,6 @@
 const Phaser = require('phaser')
 
-var config = {
+const config = {
   type: Phaser.AUTO,
   width: 800,
   height: 600,
@@ -18,11 +18,11 @@ var config = {
   }
 };
 
-var game = new Phaser.Game(config);
+const game = new Phaser.Game(config);
 
-var player;
-var score = 0;
-var scoreText;
+let player;
+let score = 0;
+let scoreText;
 
 function preload () {
   this.load.image('sky', 'assets/sky.png');
@@ -142,9 +142,9 @@ function collectStar (player, star) {
     });
 
     // Pick x coordinate to spawn, will be on oppside side of player
-    var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+    const x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
 
-    var bomb = bombs.create(x, 16, 'bomb');
+    const bomb = bombs.create(x, 16, 'bomb');
     bomb.setBounce(1);
     bomb.setCollideWorldBounds(true);
     // Random velocity
